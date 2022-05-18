@@ -16,7 +16,4 @@ for i in range(len(devices["devices"])):
 def get_devices():
     eel.list_devices(device_names)
 
-
-
-
 eel.start("devices.html", size=window_size)

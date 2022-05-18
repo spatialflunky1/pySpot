@@ -1,11 +1,10 @@
 eel.expose(list_devices);
 function list_devices(devices) {
     for (const device of devices) {
-        var tag = document.createElement("button");
-        var text = document.createTextNode(device);
-        tag.appendChild(text);
-        var element = document.getElementById("device_list");
-        element.appendChild(tag);
+        var table = document.getElementById("device-list");
+        var row = table.insertRow();
+        var cell = row.insertCell(0);
+        cell.innerHTML = "<button id='button'>"+device+"</button>"
     }
 }
 
