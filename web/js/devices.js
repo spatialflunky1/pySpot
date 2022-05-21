@@ -4,12 +4,15 @@ function list_devices(devices) {
         var table = document.getElementById("device-list");
         var row = table.insertRow();
         var cell = row.insertCell(0);
-        cell.innerHTML = "<button id='button'>"+device+"</button>"
+        var encoded_device=btoa(device);
+        cell.innerHTML = "<button id='button' onClick='open_player(\""+encoded_device+"\")'>"+device+"</button>"
     }
+}
+
+function open_player(encoded_device) {
+    location.href = "player.html?device="+encoded_device;
 }
 
 window.onload = function() {
     eel.get_devices();
 };
-
-// document.getElementById("button-temp").addEventListener("click", ()=>{eel.get_devices()}, false);
