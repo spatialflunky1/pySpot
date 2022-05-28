@@ -42,6 +42,7 @@ def allPlaylists(DeviceID):
     while playlists["next"]:
         playlists = spotify.next(playlists)
         playlasts.extend(playlists["items"])
+    print(playlasts)
     x = len(playlasts[0]["name"])
     z = 0
     playButtons = []
