@@ -11,7 +11,6 @@ eel.init("web")
 
 spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=options.scope,client_secret=options.CS,client_id=options.CID, redirect_uri=options.redirectURI))
 devices = spotify.devices()
-songs_full = {}
 devices_full = {}
 
 for i in range(len(devices["devices"])):
@@ -33,20 +32,18 @@ def get_playlists():
     playlistsx = []
     for i in range(len(playlists2)):
         name = playlists2[i]["name"]
+        ID = playlists2[i]["uri"]
         if len(name) >=30:
             name=name[0:28]
             name += "..."
         playlistsx.append(name)
+        playlistsx.append(ID)
     eel.list_playlists(playlistsx)
 
 @eel.expose
 def get_songs(playlist):
     songs = []
-    ID = ""
-    for i in playlists2:
-        if i["name"] == playlist:
-            ID = i["uri"].split(":")[-1]
-            break
+    ID = playlist.split(":")[-1]
     results = spotify.user_playlist_tracks("kandrus71",ID)
     tracks = results["items"]
     while results['next']:
@@ -54,16 +51,16 @@ def get_songs(playlist):
         tracks.extend(results['items'])
     for song in tracks:
         if song["track"] != None:
-            songs_full[song["track"]["name"]] = song["track"]["uri"]
             songs.append(song["track"]["name"])
+            songs.append(song["track"]["uri"])
     eel.list_songs(songs)
 
 @eel.expose
-def start_song(device, song):
-    print("Now Playing: "+song+"\nPlaying from: "+device)
+def start_song(device, ID):
+    print("Now Playing: "+ID+"\nPlaying from: "+device)
     try:
-        spotify.start_playback(devices_full[device], None, [songs_full[song]])
+        spotify.start_playback(devices_full[device], None, [ID])
     except:
-        print("Can't play "+song)
+        print("Can't play "+ID)
 
 eel.start("devices.html", size=window_size)

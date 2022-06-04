@@ -7,42 +7,44 @@ function getParameterByName(name, url = window.location.href) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function update_album_line() {
-    document.getElementById("verLine").style.height = document.documentElement.scrollHeight.toString()+"px";
-}
-
-function open_playlist(encoded_playlist) {
-    var playlist = decodeURIComponent(atob(encoded_playlist));
-    eel.get_songs(playlist);
+function open_playlist(playlist_id) {
+    eel.get_songs(playlist_id);
 }
 
 eel.expose(list_songs)
 function list_songs(songs) {
-    var table = document.getElementById("song-list");
-    table.innerHTML="";
-    for (const song of songs) {
-        var row = table.insertRow();
-        var cell = row.insertCell(0);
-        cell.innerHTML = "<button id='song_button' onClick='play_song(\""+btoa(encodeURIComponent(song))+"\")'>"+song+"</button>";
+    var song_list = document.getElementById("song-list");
+    song_list.innerHTML="";
+    const ids = [];
+    const song_names = [];
+    for (let i=0; i<songs.length; i++) {
+        if (i%2==0) song_names.push(songs[i]);
+        else ids.push(songs[i]);
     }
-    update_album_line();
+    for (let i=0; i<songs.length/2; i++) {
+        song_list.innerHTML += "<button id='song_button' onClick='play_song(\""+ids[i]+"\")'>"+song_names[i]+"</button><br><br>";
+    }
+    song_list.scrollTop = document.documentElement.scrollTop = 0;
 }
 
 eel.expose(list_playlists);
 function list_playlists(playlists) {
-    for (const playlist of playlists) {
-        var table = document.getElementById("playlist-list");
-        var row = table.insertRow();
-        var cell = row.insertCell(0);
-        cell.innerHTML = "<button id='playlist_button' onClick='open_playlist(\""+btoa(encodeURIComponent(playlist))+"\")'>"+playlist+"</button>";
+    var playlist_list = document.getElementById("playlist-list");
+    const ids = [];
+    const playlist_names = [];
+    for (let i=0; i<playlists.length; i++) {
+        if (i%2==0) playlist_names.push(playlists[i]);
+        else ids.push(playlists[i]);
     }
-    update_album_line();
+    for (let i=0; i<playlists.length/2; i++) {
+        playlist_list.innerHTML += "<button id='playlist_button' onClick='open_playlist(\""+ids[i]+"\")'>"+playlist_names[i]+"</button><br><br>";
+    }
+    document.getElementById("verLine").style.height = document.documentElement.scrollHeight.toString()+"px";
 }
 
-function play_song(song) {
+function play_song(id) {
     var device = atob(getParameterByName('device'));
-    song = decodeURIComponent(atob(song))
-    eel.start_song(device, song)
+    eel.start_song(device, id)
 }
 
 window.onload = function() {

@@ -64,8 +64,20 @@ td {
     color: white;
 }
 
+#content, html, body {
+    height: 100%;
+}
+
 #playlist-list {
     float: left;
+    height: 100%;
+    overflow: auto;
+}
+
+#song-list {
+    float: left;
+    height: 100%;
+    overflow: auto;
 }
 
 #verLine {
