@@ -23,7 +23,7 @@ function list_songs(songs) {
     for (const song of songs) {
         var row = table.insertRow();
         var cell = row.insertCell(0);
-        cell.innerHTML = "<button id='song_button'>"+song+"</button>";
+        cell.innerHTML = "<button id='song_button' onClick='play_song(\""+btoa(encodeURIComponent(song))+"\")'>"+song+"</button>";
     }
     update_album_line();
 }
@@ -39,8 +39,10 @@ function list_playlists(playlists) {
     update_album_line();
 }
 
-function play_song() {
+function play_song(song) {
     var device = atob(getParameterByName('device'));
+    song = decodeURIComponent(atob(song))
+    eel.start_song(device, song)
 }
 
 window.onload = function() {
